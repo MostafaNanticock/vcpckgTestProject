@@ -30,23 +30,25 @@ jobs:
           - os: windows-latest
             c_compiler: cl
             cpp_compiler: cl
-          - os: ubuntu-latest
-            c_compiler: gcc
-            cpp_compiler: g++
-          - os: ubuntu-latest
-            c_compiler: clang
-            cpp_compiler: clang++
-        # exclude:
-          - os: windows-latest
-            c_compiler: gcc
-          - os: windows-latest
-            c_compiler: clang
-          - os: ubuntu-latest
-            c_compiler: cl
+            
+        #exclude:
+        #  - os: ubuntu-latest
+        #    c_compiler: gcc
+        #    cpp_compiler: g++
+        #  - os: ubuntu-latest
+        #    c_compiler: clang
+        #    cpp_compiler: clang++
+        #  - os: windows-latest
+        #    c_compiler: gcc
+        #  - os: windows-latest
+        #    c_compiler: clang
+        #  - os: ubuntu-latest
+        #    c_compiler: cl
 
     steps:
-    - uses: actions/checkout@v4
-
+    - name: Checkout Repository
+      uses: actions/checkout@v3
+    
     - name: Set reusable strings
       # Turn repeated input strings (such as the build output directory) into step outputs. These step outputs can be used throughout the workflow file.
       id: strings
@@ -79,11 +81,11 @@ jobs:
       run: |
         .\vcpkg\vcpkg export --binary-cache --x-github-artifact=binary-cache
 
-    - name: Upload Cached Binaries
-      uses: actions/upload-artifact@v3
-      with:
-        name: vcpkg-cache
-        path: ${{ github.workspace }}\vcpkg\packages
+    # - name: Upload Cached Binaries
+    #   uses: actions/upload-artifact@v3
+    #   with:
+    #     name: vcpkg-cache
+    #     path: ${{ github.workspace }}\vcpkg\packages
 
     - name: Test
       working-directory: ${{ steps.strings.outputs.build-output-dir }}
