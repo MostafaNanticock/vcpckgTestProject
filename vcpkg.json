@@ -1,7 +1,6 @@
 {
   "dependencies": [
     "fmt",
-    "boost-dll",
     "crashpad"
   ]
 }
