@@ -13,7 +13,7 @@ jobs:
     runs-on: ${{ matrix.os }}
     env: 
       USERNAME: MostafaNanticock
-      VCPKG_EXE: ${{ github.workspace }}\vcpkg\vcpkg
+      VCPKG_EXE: ${{ github.workspace }}/vcpkg/vcpkg
       FEED_URL: https://nuget.pkg.github.com/MostafaNanticock/index.json
       VCPKG_BINARY_SOURCES: "clear;nuget,https://nuget.pkg.github.com/MostafaNanticock/index.json,readwrite"
 
@@ -47,20 +47,6 @@ jobs:
       run: |
         echo "build-output-dir=${{ github.workspace }}/build" >> "$GITHUB_OUTPUT"
 
-    - name: Add NuGet sources
-      shell: pwsh
-      run: |
-        .$(vcpkg/vcpkg.exe fetch nuget) `
-          sources add `
-          -Source "${{ env.FEED_URL }}" `
-          -StorePasswordInClearText `
-          -Name GitHubPackages `
-          -UserName "${{ env.USERNAME }}" `
-          -Password "${{ secrets.GH_PACKAGES_TOKEN }}"
-        .$(${{ env.VCPKG_EXE }} fetch nuget) `
-          setapikey "${{ secrets.GH_PACKAGES_TOKEN }}" `
-          -Source "${{ env.FEED_URL }}"
-
     - name: Install vcpkg
       run: |
         git clone https://github.com/microsoft/vcpkg.git
@@ -89,9 +75,9 @@ jobs:
           core.exportVariable('ACTIONS_CACHE_URL', process.env.ACTIONS_CACHE_URL || '');
           core.exportVariable('ACTIONS_RUNTIME_TOKEN', process.env.ACTIONS_RUNTIME_TOKEN || '');
 
-    # - name: Export Cached vcpkg Binaries
-    #   run: |
-    #     .\vcpkg\vcpkg export --binary-cache --x-github-artifact=binary-cache
+    - name: Export Cached vcpkg Binaries
+      run: |
+        .\vcpkg\vcpkg export --zip --output-dir build --output=vcpkg_prebuilt
 
     # - name: Upload Cached Binaries
     #   uses: actions/upload-artifact@v3
