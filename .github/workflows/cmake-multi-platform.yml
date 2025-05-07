@@ -81,11 +81,11 @@ jobs:
       run: |
         .\vcpkg\vcpkg export --binary-cache --x-github-artifact=binary-cache
 
-    - name: Upload Cached Binaries
-      uses: actions/upload-artifact@v3
-      with:
-        name: vcpkg-cache
-        path: ${{ github.workspace }}\vcpkg\packages
+    # - name: Upload Cached Binaries
+    #   uses: actions/upload-artifact@v3
+    #   with:
+    #     name: vcpkg-cache
+    #     path: ${{ github.workspace }}\vcpkg\packages
 
     - name: Test
       working-directory: ${{ steps.strings.outputs.build-output-dir }}
