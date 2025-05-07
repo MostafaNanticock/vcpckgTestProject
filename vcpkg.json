@@ -1,0 +1,8 @@
+{
+  "dependencies": [
+    "fmt",
+    "boost-dll",
+    "crashpad",
+    "expac"
+  ]
+}
