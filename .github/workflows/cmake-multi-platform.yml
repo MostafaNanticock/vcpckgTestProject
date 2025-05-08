@@ -113,13 +113,10 @@ jobs:
 
     - name: Package
       id: package
-      shell: pwsh
+      working-directory: ${{ steps.strings.outputs.build-output-dir }}
       run: |
-        Set-Location -Path ${{ steps.strings.outputs.build-output-dir }}
-        vcpkg export --zip --output-dir ${{ steps.strings.outputs.build-output-dir }} --output=vcpkg_prebuilt
-        7z a -tzip ${{ steps.strings.outputs.package-path }} *
-        $package_path = "${{ steps.strings.outputs.package-path }}".Replace('\', '/')
-        echo "package_path=$package_path" >> $env:GITHUB_OUTPUT
+        vcpkg export --zip --output=vcpkg_prebuilt
+        zip -r ${{ steps.strings.outputs.package-path }} .
 
     - name: Upload binaries to release
       uses: softprops/action-gh-release@v1
