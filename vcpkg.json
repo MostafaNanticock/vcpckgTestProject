@@ -1,5 +1,12 @@
 {
   "dependencies": [
-    "fmt"
+      "fmt",
+      "zlib"
+  ],
+  "overrides": [
+    { 
+        "name": "fmt", 
+        "version": "8.0.1"
+    }
   ]
 }

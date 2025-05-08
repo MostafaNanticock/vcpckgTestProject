@@ -1,12 +1,9 @@
-cmake_minimum_required(VERSION 3.10)
+cmake_minimum_required(VERSION 3.18)
 
-set(CMAKE_CXX_STANDARD 17)
+project(HelloWorld CXX)
 
-project(HelloWorld)
+add_executable(main main.cpp)
 
-    find_package(fmt CONFIG REQUIRED)
-
-
-add_executable(HelloWorld helloworld.cpp)
-
-    target_link_libraries(HelloWorld PRIVATE fmt::fmt)
+find_package(ZLIB REQUIRED)
+find_package(fmt CONFIG REQUIRED)
+target_link_libraries(main PRIVATE ZLIB::ZLIB fmt::fmt)
