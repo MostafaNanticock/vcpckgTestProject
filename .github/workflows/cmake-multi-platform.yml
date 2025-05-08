@@ -97,15 +97,18 @@ jobs:
       run: ctest --build-config ${{ matrix.build_type }}
 
     - name: Package
-      shell: bash
+      shell: pwsh
       run: |
-        cd ${{ steps.strings.outputs.build-output-dir }}
+        $buildOutputDir = "${{ steps.strings.outputs.build-output-dir }}"
+        echo "artifact-name=my-package" >> $env:GITHUB_OUTPUT
         # Create a package (e.g., zip file) containing the build output
-        if [[ "$RUNNER_OS" == "Windows" ]]; then
-          7z a -tzip ${{ steps.strings.outputs.artifact-name }}.zip *
-        else
-          zip -r ${{ steps.strings.outputs.artifact-name }}.zip *
-        fi
+        if ($env:RUNNER_OS -eq "Windows") {
+          Set-Location -Path $buildOutputDir
+          7z a -tzip "${{ steps.strings.outputs.artifact-name }}.zip" *
+        } else {
+          cd $buildOutputDir
+          zip -r "${{ steps.strings.outputs.artifact-name }}.zip" *
+        }
 
     - name: Upload Package
       if: github.event_name == 'release'
