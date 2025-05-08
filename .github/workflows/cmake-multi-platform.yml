@@ -54,10 +54,10 @@ jobs:
         echo "${{ github.workspace }}\vcpkg" | Out-File -Append -Encoding ASCII $env:GITHUB_PATH
 
     - name: Set up vcpkg cache path
-        shell: bash
-        run: |
-          echo "VCPKG_CACHE=$HOME/vcpkg_cache" >> $GITHUB_ENV
-        if: runner.os == 'Linux'
+      shell: bash
+      run: |
+        echo "VCPKG_CACHE=$HOME/vcpkg_cache" >> $GITHUB_ENV
+      if: runner.os == 'Linux'
 
     - name: Set up vcpkg cache path (Windows)
       shell: pwsh
