@@ -43,8 +43,10 @@ jobs:
       shell: bash
       run: |
         BUILD_OUTPUT_DIR="${{ github.workspace }}/build"
+        BUILD_OUTPUT_DIR=$(echo "$BUILD_OUTPUT_DIR" | tr '\\' '/')
         echo "build-output-dir=$BUILD_OUTPUT_DIR" >> "$GITHUB_OUTPUT"
         PACKAGE_PATH="$BUILD_OUTPUT_DIR/my-package.zip"
+        PACKAGE_PATH=$(echo "$PACKAGE_PATH" | tr '\\' '/')
         echo "package-path=$PACKAGE_PATH" >> "$GITHUB_OUTPUT"
 
     - name: Install vcpkg on Windows
@@ -101,14 +103,16 @@ jobs:
       run: ctest --build-config ${{ matrix.build_type }}
 
     - name: Package
+      id: package
       shell: pwsh
       run: |
         Set-Location -Path ${{ steps.strings.outputs.build-output-dir }}
-        7z a -tzip "my-package.zip" *
+        7z a -tzip ${{ steps.strings.outputs.package-path }} *
+        echo "package_path=${{ steps.strings.outputs.package-path }}" >> $env:GITHUB_OUTPUT
 
     - name: Upload binaries to release
       uses: softprops/action-gh-release@v1
       if: github.event_name == 'release'
       with:
-        files: ${{ steps.strings.outputs.package-path }}
+        files: ${{ steps.package.outputs.package_path }}
         token: ${{ secrets.GITHUB_TOKEN }}
