@@ -110,4 +110,4 @@ jobs:
       if: github.event_name == 'release'
       with:
         files: ${{ steps.strings.outputs.artifact-name }}.zip
-        token: ${{ secrets.GITHUB_TOKEN }}
+        token: ${{ secrets.ACTIONS_TOKEN }}
