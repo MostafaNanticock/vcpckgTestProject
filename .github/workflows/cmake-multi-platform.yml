@@ -28,13 +28,9 @@ jobs:
       #
       # To add more build types (Release, Debug, RelWithDebInfo, etc.) customize the build_type list.
       matrix:
-        os: [windows-latest] # [ubuntu-latest, macos-latest]
+        os: [windows-latest, ubuntu-latest, macos-latest] # [ubuntu-latest, macos-latest]
         build_type: [Release]
-        c_compiler: [cl] # [gcc, clang]
-        include:
-          - os: windows-latest
-            c_compiler: cl
-            cpp_compiler: cl
+        c_compiler: [cl, gcc, clang] # [gcc, clang]
 
     steps:
     - name: Checkout Repository
@@ -47,34 +43,20 @@ jobs:
       run: |
         echo "build-output-dir=${{ github.workspace }}/build" >> "$GITHUB_OUTPUT"
 
-    - name: Install vcpkg
+    - name: Install vcpkg on Windows
+      if: runner.os == 'Windows'
+      shell: pwsh
       run: |
         git clone https://github.com/microsoft/vcpkg.git
         .\vcpkg\bootstrap-vcpkg.bat
-        echo "${{ github.workspace }}\vcpkg" | Out-File -Append -Encoding ASCII $env:GITHUB_PATH
+        "$env:GITHUB_PATH", "${{ github.workspace }}\vcpkg" | Out-File -Append -Encoding ASCII
 
-    - name: Set up vcpkg cache path
-      shell: bash
+    - name: Install vcpkg on Unix
+      if: runner.os != 'Windows'
       run: |
-        echo "VCPKG_CACHE=$HOME/vcpkg_cache" >> $GITHUB_ENV
-      if: runner.os == 'Linux'
-
-    - name: Set up vcpkg cache path (Windows)
-      shell: pwsh
-      run: |
-        echo "VCPKG_CACHE=C:\vcpkg_cache" >> $env:GITHUB_ENV
-      if: runner.os == 'Windows'
-
-    - name: Cache vcpkg binaries
-      uses: actions/cache@v3
-      with:
-        path: ${{ env.VCPKG_CACHE }}
-        key: vcpkg-${{ runner.os }}-${{ hashFiles('**/vcpkg.json') }}
-        restore-keys: |
-          vcpkg-${{ runner.os }}-
-
-    - name: Install dependencies using vcpkg
-      run: .\vcpkg\vcpkg install --binarysource="clear;files,${{ env.VCPKG_CACHE }}"
+        git clone https://github.com/microsoft/vcpkg.git
+        ./vcpkg/bootstrap-vcpkg.sh
+        echo "${{ github.workspace }}/vcpkg" >> $GITHUB_PATH
 
     - name: Configure CMake
       # Configure CMake in a 'build' subdirectory. `CMAKE_BUILD_TYPE` is only required if you are using a single-configuration generator such as make.
