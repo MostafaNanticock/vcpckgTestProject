@@ -1,18 +1,18 @@
 {
   "dependencies": [
-      "fmt",
-      "zlib",
-      "crashpad",
-      "boost-dll"
+    "fmt",
+    "zlib",
+    "crashpad",
+    "boost-dll"
   ],
   "overrides": [
-    { 
-        "name": "fmt", 
-        "version": "8.0.1"
+    {
+      "name": "fmt",
+      "version": "8.0.1"
     },
-    { 
-      "name": "crashpad", 
+    {
+      "name": "crashpad",
       "version": "2024-04-11"
-  }
+    }
   ]
 }

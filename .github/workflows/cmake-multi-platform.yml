@@ -113,16 +113,17 @@ jobs:
 
     - name: Package
       id: package
-      working-directory: ${{ steps.strings.outputs.build-output-dir }}
+      shell: pwsh
       run: |
-        ${{ github.workspace }}\vcpkg\vcpkg export --zip --output-dir=. --output=vcpkg_prebuilt
-        PACKAGE_PATH="${{ steps.strings.outputs.package-path }}"
-        PACKAGE_PATH="${PACKAGE_PATH//'\\'/'/'}"
-        zip -r "$PACKAGE_PATH" .
+        Set-Location -Path ${{ steps.strings.outputs.build-output-dir }}
+        7z a -tzip ${{ steps.strings.outputs.package-path }} *
+        $package_path = "${{ steps.strings.outputs.package-path }}".Replace('\', '/')
+        echo "package_path=$package_path" >> $env:GITHUB_OUTPUT
 
     - name: Upload binaries to release
+      uses: softprops/action-gh-release@v1
       if: github.event_name == 'release'
-      run: |
-        gh release upload "${{ github.event.release.tag_name }}" "${{ steps.package.outputs.package-path }}" --clobber
-      env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      with:
+        # input file must use forward slashes, or otherwise this will fail
+        files: ${{ steps.package.outputs.package_path }}
+        token: ${{ secrets.GITHUB_TOKEN }}
