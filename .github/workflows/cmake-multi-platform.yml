@@ -8,7 +8,7 @@ on:
   pull_request:
     branches: [ "master" ]
   release:
-    types: [published]
+    types: [created]
 
 jobs:
   build:
@@ -112,13 +112,8 @@ jobs:
           zip -r "${{ steps.strings.outputs.artifact-name }}.zip" *
         }
 
-    - name: Upload Package
-      if: github.event_name == 'release'
-      uses: actions/upload-release-asset@v1
-      env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+    - name: Upload binaries to release
+      uses: softprops/action-gh-release@v1
       with:
-        upload_url: ${{ github.event.release.upload_url }}
-        asset_path: ${{ steps.strings.outputs.build-output-dir }}/${{ steps.strings.outputs.artifact-name }}.zip
-        asset_name: ${{ steps.strings.outputs.artifact-name }}.zip
-        asset_content_type: application/zip
+        files: ${{ steps.strings.outputs.artifact-name }}.zip
+        token: ${{ secrets.GITHUB_TOKEN }}
