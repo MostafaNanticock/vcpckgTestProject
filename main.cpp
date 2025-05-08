@@ -7,7 +7,6 @@
 
 int main()
 {
-    // Some useless comment
     const std::string fmtVersionString =
         std::to_string(FMT_VERSION_MAJOR) + '.' + std::to_string(FMT_VERSION_MINOR) + '.' + std::to_string(FMT_VERSION_PATCH);
 
