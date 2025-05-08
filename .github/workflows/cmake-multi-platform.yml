@@ -114,7 +114,7 @@ jobs:
       shell: pwsh
       run: |
         Set-Location -Path ${{ steps.strings.outputs.build-output-dir }}
-        7z a -tzip ${{ steps.strings.outputs.package-path }} /release/*
+        7z a -tzip ${{ steps.strings.outputs.package-path }} release/*
         echo "package_path=${{ steps.strings.outputs.package-path }}" >> $env:GITHUB_OUTPUT
 
     - name: Upload binaries to release
