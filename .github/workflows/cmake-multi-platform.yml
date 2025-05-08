@@ -3,10 +3,10 @@
 name: CMake on multiple platforms
 
 on:
-  push:
-    branches: [ "master" ]
-  pull_request:
-    branches: [ "master" ]
+  # push:
+  #   branches: [ "master" ]
+  # pull_request:
+  #   branches: [ "master" ]
   release:
     types: [created]
 
@@ -41,9 +41,12 @@ jobs:
     - name: Set reusable strings
       # Turn repeated input strings (such as the build output directory) into step outputs. These step outputs can be used throughout the workflow file.
       id: strings
-      shell: bash
+      shell: pwsh
       run: |
-        echo "build-output-dir=${{ github.workspace }}/build" >> "$GITHUB_OUTPUT"
+        $buildOutputDir = "${{ github.workspace }}/build"
+        echo "build-output-dir=$buildOutputDir" >> "$GITHUB_OUTPUT"
+        $packageFullPath = Join-Path -Path $buildOutputDir -ChildPath "my-package.zip"
+        echo "package-path=$packageFullPath" >> "$GITHUB_OUTPUT"
 
     - name: Install vcpkg on Windows
       if: runner.os == 'Windows'
@@ -101,16 +104,12 @@ jobs:
     - name: Package
       shell: pwsh
       run: |
-        $buildOutputDir = "${{ steps.strings.outputs.build-output-dir }}"
-        Set-Location -Path $buildOutputDir
+        Set-Location -Path ${{ steps.strings.outputs.build-output-dir }}
         7z a -tzip "my-package.zip" *
-        $packageFullPath = Join-Path -Path $buildOutputDir -ChildPath "my-package.zip"
-        Write-Host "Package created at: $packageFullPath"
-        echo "PACKAGE_PATH=$packageFullPath" | Out-File -FilePath $env:GITHUB_ENV -Append
 
     - name: Upload binaries to release
       uses: softprops/action-gh-release@v1
       if: github.event_name == 'release'
       with:
-        files: $env:PACKAGE_PATH
+        files: ${{ steps.strings.outputs.package-path }}
         token: ${{ secrets.GITHUB_TOKEN }}
