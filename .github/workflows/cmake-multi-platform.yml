@@ -104,10 +104,13 @@ jobs:
         $buildOutputDir = "${{ steps.strings.outputs.build-output-dir }}"
         Set-Location -Path $buildOutputDir
         7z a -tzip "my-package.zip" *
+        $packageFullPath = Join-Path -Path $buildOutputDir -ChildPath "my-package.zip"
+        Write-Host "Package created at: $packageFullPath"
+        echo "PACKAGE_PATH=$packageFullPath" | Out-File -FilePath $env:GITHUB_ENV -Append
 
     - name: Upload binaries to release
       uses: softprops/action-gh-release@v1
       if: github.event_name == 'release'
       with:
-        files: "${{ steps.strings.outputs.build-output-dir }}/my-package.zip"
+        files: $env:PACKAGE_PATH
         token: ${{ secrets.GITHUB_TOKEN }}
