@@ -115,7 +115,7 @@ jobs:
       id: package
       working-directory: ${{ steps.strings.outputs.build-output-dir }}
       run: |
-        vcpkg export --zip --output-dir=. --output=vcpkg_prebuilt
+        ${{ github.workspace }}\vcpkg\vcpkg export --zip --output-dir=. --output=vcpkg_prebuilt
         PACKAGE_PATH="${{ steps.strings.outputs.package-path }}"
         PACKAGE_PATH="${PACKAGE_PATH//'\\'/'/'}"
         zip -r "$PACKAGE_PATH" .
