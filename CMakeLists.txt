@@ -22,7 +22,7 @@ execute_process(
     --output-dir=.
     --output=vcpkg_prebuilt
     --triplet "${VCPKG_TARGET_TRIPLET}"
-    --vcpkg-root "$ENV{VCPKG_ROOT}"
+    --vcpkg-root "${Z_VCPKG_ROOT_DIR}"
     "--x-wait-for-lock"
     "--x-manifest-root=${VCPKG_MANIFEST_DIR}"
     "--x-install-root=${_VCPKG_INSTALLED_DIR}"
