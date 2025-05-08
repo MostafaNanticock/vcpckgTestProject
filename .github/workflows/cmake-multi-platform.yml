@@ -3,10 +3,10 @@
 name: CMake on multiple platforms
 
 on:
-  push:
-    branches: [ "master" ]
-  pull_request:
-    branches: [ "master" ]
+  # push:
+  #   branches: [ "master" ]
+  # pull_request:
+  #   branches: [ "master" ]
   release:
     types: [created]
 
@@ -116,7 +116,7 @@ jobs:
       shell: pwsh
       run: |
         Set-Location -Path ${{ steps.strings.outputs.build-output-dir }}
-        vcpkg export --zip --output-dir release --output=vcpkg_prebuilt
+        vcpkg export --zip --output-dir ${{ steps.strings.outputs.build-output-dir }} --output=vcpkg_prebuilt
         7z a -tzip ${{ steps.strings.outputs.package-path }} *
         $package_path = "${{ steps.strings.outputs.package-path }}".Replace('\', '/')
         echo "package_path=$package_path" >> $env:GITHUB_OUTPUT
