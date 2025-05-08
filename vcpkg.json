@@ -1,7 +1,9 @@
 {
   "dependencies": [
       "fmt",
-      "zlib"
+      "zlib",
+      "crashpad",
+      "boost-dll"
   ],
   "overrides": [
     { 
