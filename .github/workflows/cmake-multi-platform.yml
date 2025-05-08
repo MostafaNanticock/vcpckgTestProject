@@ -102,18 +102,12 @@ jobs:
       shell: pwsh
       run: |
         $buildOutputDir = "${{ steps.strings.outputs.build-output-dir }}"
-        echo "artifact-name=my-package" >> $env:GITHUB_OUTPUT
-        # Create a package (e.g., zip file) containing the build output
-        if ($env:RUNNER_OS -eq "Windows") {
-          Set-Location -Path $buildOutputDir
-          7z a -tzip "${{ steps.strings.outputs.artifact-name }}.zip" *
-        } else {
-          cd $buildOutputDir
-          zip -r "${{ steps.strings.outputs.artifact-name }}.zip" *
-        }
+        Set-Location -Path $buildOutputDir
+        7z a -tzip "my-package.zip" *
 
     - name: Upload binaries to release
       uses: softprops/action-gh-release@v1
+      if: github.event_name == 'release'
       with:
         files: ${{ steps.strings.outputs.artifact-name }}.zip
         token: ${{ secrets.GITHUB_TOKEN }}
