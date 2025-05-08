@@ -109,5 +109,5 @@ jobs:
       uses: softprops/action-gh-release@v1
       if: github.event_name == 'release'
       with:
-        files: "${{ steps.strings.outputs.build-output-dir }}\my-package.zip"
+        files: "${{ steps.strings.outputs.build-output-dir }}/my-package.zip"
         token: ${{ secrets.GITHUB_TOKEN }}
