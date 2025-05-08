@@ -53,8 +53,8 @@ jobs:
         echo "tag-name=$TAG_NAME" >> "$GITHUB_OUTPUT"
         echo "build-env=$BUILD_ENV" >> "$GITHUB_OUTPUT"
         echo "package-name=$PACKAGE_NAME" >> "$GITHUB_OUTPUT"
-        echo "build-output-dir=$BUILD_OUTPUT_DIR" >> "$GITHUB_OUTPUT"
-        echo "package-path=$PACKAGE_PATH" >> "$GITHUB_OUTPUT"
+        echo "build-output-dir=${BUILD_OUTPUT_DIR//'\\'/'/'}" >> "$GITHUB_OUTPUT"
+        echo "package-path=${PACKAGE_PATH//'\\'/'/'}" >> "$GITHUB_OUTPUT"
 
     - name: Install vcpkg on Windows
       if: runner.os == 'Windows'
