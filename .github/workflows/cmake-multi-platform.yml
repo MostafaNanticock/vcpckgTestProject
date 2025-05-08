@@ -115,7 +115,8 @@ jobs:
       run: |
         Set-Location -Path ${{ steps.strings.outputs.build-output-dir }}
         7z a -tzip ${{ steps.strings.outputs.package-path }} release/*
-        echo "package_path=${{ steps.strings.outputs.package-path }}" >> $env:GITHUB_OUTPUT
+        $package_path = "${{ steps.strings.outputs.package-path }}".Replace('\', '/')
+        echo "package_path=$package_path" >> $env:GITHUB_OUTPUT
 
     - name: Upload binaries to release
       uses: softprops/action-gh-release@v1
