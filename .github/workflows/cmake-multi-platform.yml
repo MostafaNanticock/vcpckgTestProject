@@ -81,15 +81,13 @@ jobs:
     - name: Add NuGet sources
       shell: pwsh
       run: |
-        & "${{ env.VCPKG_EXE }}" nuget `
-          sources add `
+        nuget sources add `
           -Source "${{ env.FEED_URL }}" `
           -StorePasswordInClearText `
           -Name GitHubPackages `
           -UserName "${{ env.USERNAME }}" `
           -Password "${{ secrets.GITHUB_TOKEN }}"
-        & "${{ env.VCPKG_EXE }}" nuget `
-          setapikey "${{ secrets.GITHUB_TOKEN }}" `
+        nuget setapikey "${{ secrets.GITHUB_TOKEN }}" `
           -Source "${{ env.FEED_URL }}"
 
     - name: Configure CMake
