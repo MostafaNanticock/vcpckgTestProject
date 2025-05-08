@@ -42,11 +42,18 @@ jobs:
       id: strings
       shell: bash
       run: |
+        REPO_NAME=$(echo "${{ github.repository }}" | cut -d'/' -f2)
+        TAG_NAME="${{ github.ref_name }}"
+        BUILD_ENV="${{ matrix.os }}"
+        PACKAGE_NAME="${REPO_NAME}_${TAG_NAME}_${BUILD_ENV}.zip"
         BUILD_OUTPUT_DIR="${{ github.workspace }}/build"
-        BUILD_OUTPUT_DIR=$(echo "$BUILD_OUTPUT_DIR" | tr '\\' '/')
+        PACKAGE_PATH="${BUILD_OUTPUT_DIR}/${PACKAGE_NAME}"
+
+        echo "repo-name=$REPO_NAME" >> "$GITHUB_OUTPUT"
+        echo "tag-name=$TAG_NAME" >> "$GITHUB_OUTPUT"
+        echo "build-env=$BUILD_ENV" >> "$GITHUB_OUTPUT"
+        echo "package-name=$PACKAGE_NAME" >> "$GITHUB_OUTPUT"
         echo "build-output-dir=$BUILD_OUTPUT_DIR" >> "$GITHUB_OUTPUT"
-        PACKAGE_PATH="$BUILD_OUTPUT_DIR/my-package.zip"
-        PACKAGE_PATH=$(echo "$PACKAGE_PATH" | tr '\\' '/')
         echo "package-path=$PACKAGE_PATH" >> "$GITHUB_OUTPUT"
 
     - name: Install vcpkg on Windows
@@ -107,7 +114,7 @@ jobs:
       shell: pwsh
       run: |
         Set-Location -Path ${{ steps.strings.outputs.build-output-dir }}
-        7z a -tzip ${{ steps.strings.outputs.package-path }} *
+        7z a -tzip ${{ steps.strings.outputs.package-path }} /release/*
         echo "package_path=${{ steps.strings.outputs.package-path }}" >> $env:GITHUB_OUTPUT
 
     - name: Upload binaries to release
