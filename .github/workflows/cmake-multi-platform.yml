@@ -44,7 +44,7 @@ jobs:
       run: |
         REPO_NAME=$(echo "${{ github.repository }}" | cut -d'/' -f2)
         TAG_NAME="${{ github.ref_name }}"
-        BUILD_ENV="${{ matrix.os }}"
+        BUILD_ENV="${{ matrix.os }}-${{ matrix.c_compiler }}"
         PACKAGE_NAME="${REPO_NAME}_${TAG_NAME}_${BUILD_ENV}.zip"
         BUILD_OUTPUT_DIR="${{ github.workspace }}/build"
         PACKAGE_PATH="${BUILD_OUTPUT_DIR}/${PACKAGE_NAME}"
@@ -122,5 +122,6 @@ jobs:
       uses: softprops/action-gh-release@v1
       if: github.event_name == 'release'
       with:
+        # input file must use forward slashes, or otherwise this will fail
         files: ${{ steps.package.outputs.package_path }}
         token: ${{ secrets.GITHUB_TOKEN }}
