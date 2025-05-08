@@ -116,7 +116,7 @@ jobs:
       shell: pwsh
       run: |
         Set-Location -Path ${{ steps.strings.outputs.build-output-dir }}
-        7z a -tzip ${{ steps.strings.outputs.package-path }} release/*
+        7z a -tzip ${{ steps.strings.outputs.package-path }} *
         $package_path = "${{ steps.strings.outputs.package-path }}".Replace('\', '/')
         echo "package_path=$package_path" >> $env:GITHUB_OUTPUT
 
